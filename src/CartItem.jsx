@@ -9,28 +9,44 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
-  };
+  let total = 0;
+  cart.forEach(item => {
+    // Convert item.cost (like "$12") to a number and multiply by quantity
+    const cost = parseFloat(item.cost.substring(1));
+    total += cost * item.quantity;
+  });
+  return total.toFixed(2); // Return as a string with 2 decimals (like 21.50)
+};
 
-  const handleContinueShopping = (e) => {
-   
-  };
+ const handleContinueShopping = (e) => {
+  onContinueShopping(e);
+};
 
-
+const handleCheckoutShopping = () => {
+  alert("Checkout functionality will be added later!");
+};
 
   const handleIncrement = (item) => {
-  };
+  dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+};
 
-  const handleDecrement = (item) => {
-   
-  };
-
-  const handleRemove = (item) => {
-  };
+ const handleDecrement = (item) => {
+  if (item.quantity > 1) {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+  } else {
+    // If the quantity would become 0, remove the item
+    dispatch(removeItem({ name: item.name }));
+  }
+};
+ const handleRemove = (item) => {
+  dispatch(removeItem({ name: item.name }));
+};
 
   // Calculate total cost based on quantity for an item
-  const calculateTotalCost = (item) => {
-  };
+const calculateTotalCost = (item) => {
+  const cost = parseFloat(item.cost.substring(1)); // remove '$' and convert to number
+  return (cost * item.quantity).toFixed(2);
+};
 
   return (
     <div className="cart-container">
@@ -57,7 +73,9 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={handleCheckoutShopping}>
+  Checkout
+</button>
       </div>
     </div>
   );
